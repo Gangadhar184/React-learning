@@ -1,7 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import './style.css';
 
 const heading = React.createElement("h1", {id:"title"}, "Onepiece is Greatest of all time");
+
+/* 
+    
+*/
 
 const app = document.getElementById("app");
 
