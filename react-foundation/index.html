@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>count</title>
+</head>
+<body>
+
+    <button id="btn1" onclick="handleClick()">Counter 0</button>
+
+    <script>
+
+    function handleClick(){
+        const val = document.getElementById('btn1').innerText;
+        console.log(val);
+        const currentCounter = val.split(' ')[1];
+        const newCounter = parseInt(currentCounter) + 1;
+        document.getElementById('btn1').innerText = "counter "+newCounter;
+    }
+</script>
+</body>
+</html>

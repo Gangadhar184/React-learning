@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        .todo-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+        button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="title" placeholder="todo title"><br><br>
+    <input type="text" id="description" placeholder="todo"><br><br>
+    <button onclick="addTodo()">Add Todo</button>
+    <div id="todos"></div>
+
+    <script>
+        let globalId = 1;
+
+        function loadTodos() {
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            todos.forEach(todo => {
+                const parent = document.getElementById('todos');
+                parent.appendChild(createChild(todo.title, todo.description, todo.id, todo.done));
+            });
+        }
+
+        function createChild(title, description, id, done = false) {
+            const child = document.createElement('div');
+            child.classList.add('todo-item');
+            if (done) {
+                child.classList.add('done');
+            }
+
+            const firstGrandParent = document.createElement('div');
+            firstGrandParent.innerHTML = title;
+            const secondGrandParent = document.createElement('div');
+            secondGrandParent.innerHTML = description;
+
+            const doneButton = document.createElement('button');
+            doneButton.innerHTML = done ? 'Done' : 'Mark as Done';
+            doneButton.setAttribute('onclick', `markAsDone(${id})`);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = 'Delete';
+            deleteButton.setAttribute('onclick', `deleteTodo(${id})`);
+
+            const editButton = document.createElement('button');
+            editButton.innerHTML = 'Edit';
+            editButton.setAttribute('onclick', `editTodo(${id})`);
+
+            child.appendChild(firstGrandParent);
+            child.appendChild(secondGrandParent);
+            child.appendChild(doneButton);
+            child.appendChild(deleteButton);
+            child.appendChild(editButton);
+            child.setAttribute('id', id);
+
+            return child;
+        }
+
+        function markAsDone(todoId) {
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            const todo = todos.find(todo => todo.id === todoId);
+            todo.done = !todo.done;
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        function deleteTodo(todoId) {
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            const updatedTodos = todos.filter(todo => todo.id !== todoId);
+            localStorage.setItem('todos', JSON.stringify(updatedTodos));
+            renderTodos();
+        }
+
+        function editTodo(todoId) {
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            const todo = todos.find(todo => todo.id === todoId);
+            const newTitle = prompt('Edit title', todo.title);
+            const newDescription = prompt('Edit description', todo.description);
+
+            if (newTitle && newDescription) {
+                todo.title = newTitle;
+                todo.description = newDescription;
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+            }
+        }
+
+        function addTodo() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            if (!title.trim() || !description.trim()) {
+                alert('Please enter both title and description');
+                return;
+            }
+
+            const todo = { 
+                title, 
+                description, 
+                id: globalId++, 
+                done: false 
+            };
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            todos.push(todo);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        function renderTodos() {
+            const parent = document.getElementById('todos');
+            parent.innerHTML = ''; // Clear existing todos
+            loadTodos(); // Load todos from local storage
+        }
+
+        loadTodos(); // Load todos when the page is ready
+    </script>
+</body>
+</html>

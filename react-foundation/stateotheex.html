@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="buttonParent"></div>
+    <script>
+        let state = [100,200,300];
+        function buttonPress(index){
+            state[index]++;
+            reRender();
+        }
+        function reRender(){
+            document.getElementById('buttonParent').innerHTML = '';
+            state.forEach((count,index)=>{
+                const component = buttonComponent(count, index);
+                document.getElementById('buttonParent').appendChild(component);
+            })
+        }
+        function buttonComponent(count,index){
+            const button = document.createElement('button');
+            button.innerHTML = `Count ${count}`;
+            button.addEventListener('click',function(){
+                buttonPress(index);
+            })
+            return button;
+        }
+        reRender();
+
+
+    </script>
+</body>
+</html>
