@@ -24,9 +24,8 @@ React uses a **Virtual DOM** to avoid the performance pitfalls of direct DOM man
 
 So, in short, React doesn't directly manipulate the DOM. Instead, it uses the Virtual DOM as an intermediary to efficiently update the real DOM only when necessary.
 
-# Native DOM vs React Elements
+## Native DOM vs React Elements
 
-## Native DOM Example
 
 ```javascript
 const heading1 = document.createElement('h1');
@@ -52,7 +51,7 @@ Key Takeaway
 The key advantage here is performance: React's Virtual DOM allows React to compare and update only the minimal changes, instead of manipulating the real DOM directly. This approach is far more efficient in terms of performance, especially in large-scale applications where frequent updates to the UI are common.
 # React Element Rendering using ReactDOM
 
-```javascript
+```example
 const root = ReactDOM.createRoot(container);
 root.render(heading2);
 
@@ -61,7 +60,5 @@ When we log the ReactDOM object, we can see various properties of it. In React, 
 
 The createRoot() method is used to create a "root" that React will control, which can efficiently update and manage the DOM by applying the minimal necessary changes to it. After that, render() is used to actually display the React element inside the root.
 
-css
-Copy
 
 
