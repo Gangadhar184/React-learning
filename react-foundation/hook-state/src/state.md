@@ -1,11 +1,13 @@
-### State Hook
+# State Hook
 
 - useState() signature - Its a function, it will take one parameter and it will return array of two elements
 
 **[stateValue, setState] = useState(initialState)**
 
+```jsx
 - const arr = useState(0);
 - console.log(arr); // [0,f]
+```
 
 - output will be stateValue and function expression(setter function)
 - Instead of doing arr and doing arr[0] and arr[1], we can simply do destructuring
@@ -15,6 +17,7 @@ const [count, setCount] = useState(0)
 - Always use state Setter function returned by useState to update state  This ensures that React correctly triggers a re-render of the component and updates the UI.
 - Previous it will be 0, when we update count with setState(setCount), now useState statevalue, gives us updated state, instead of giving the initalState
 
+```jsx
 function Counter(){
     const[count, setCount] = useState(0);
   const increment = ()=>{
@@ -31,8 +34,9 @@ function Counter(){
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Counter/>)
+```
 
-### Now lets see how Non-primitive data types work with useState
+## Now lets see how Non-primitive data types work with useState
 
 - We have to Focus on memory Reference and update state
 - Lets suppose we passed object as an parameter into useState
@@ -50,6 +54,7 @@ const increment = ()=>{
 
 Let's suppose we pass an object as a parameter into `useState`:
 
+```jsx
 let [user, setUser] = useState({ age: 19, name: "Luffy" });
 
 const increment = () => {
@@ -58,8 +63,10 @@ const increment = () => {
     console.log(user); // { age: 20, name: "Luffy" }
     setUser(user);
 };
+```
 
-Why Doesn't the UI Update?
+### Why Doesn't the UI Update?
+
 The age value updates in memory, but the UI does not re-render.
 When React creates the Virtual DOM (VDOM) tree, setUser(user) is called.
 Since user is an object, React performs a shallow comparison (===) and checks if the reference has changed.
@@ -67,12 +74,14 @@ Since the reference remains the same, React assumes no change occurred and skips
 Correct Way to Update the State
 To trigger a re-render, we must create a new object instead of mutating the existing one:
 
+```jsx
 const increment = () => {
     setUser(prevUser => ({
         ...prevUser,
         age: prevUser.age + 1
     }));
 };
+```
 
 ### Why Does This Work?
 
@@ -83,6 +92,7 @@ Since the reference is now different, React detects the change and triggers a re
 
 - In this lets see how setState works, and lets see the async nature of setState
 
+```jsx
 const[count, setCount] = useState(0);
 const increment=()=>{
     //count = 10
@@ -90,19 +100,20 @@ const increment=()=>{
     setCount(count + 3)
     setCount(count + 2)
 }
+```
 
 - whenever we call setState method, rerendering of data is not done immediately. React checks if data is changed or not, if data is changed it schedules rerender of the component
 - In background react maintains queue DS
-    -- Q= [11,13,12]
+  - Q= [11,13,12]
 - when we click on the btn increment, remember count is 10 in this function scope
-    //count = 10
+  - //count = 10
   - setCount(count + 1) // setCount(11)
 - still it has 2 more statements to finish this fucntion. After executing all the statements, it will schedule the rerender of the component
 
 - In next step
-    -count will be 10 only so setCount(count+3) //setCount(13);
+  - count will be 10 only so setCount(count+3) //setCount(13);
 - In next step
-    -count will be 10 only so setCount(count+2) //setCount(12);
+  - count will be 10 only so setCount(count+2) //setCount(12);
 
 - Now all the statements are executed and pushed into queue, now call stack is free, now this component will rerender
 - const[count, setCount] = useState(0); this statement will be executed first. we are invoking useState hook again(again we are passing 10 as initial state)
@@ -115,15 +126,16 @@ const increment=()=>{
 - when we click increment btn again
     now our count = 12(which is initial state)
 - it will go the same process as above
-    setCount(c+1) setCount(13)
-    setCount(c+3) setCount(15)
-    setCount(c+2) setCount(14) all we be pushed into queue
+  - setCount(c+1) setCount(13)
+  - setCount(c+3) setCount(15)
+  - setCount(c+2) setCount(14) all we be pushed into queue
 - on ui we see 14 on 3rd render we see 14 .
 
--If we observe carefully React is not doing cascading updates. Instead we are getting final increment in the function. So react implemented another method to setter function
+- If we observe carefully React is not doing cascading updates. Instead we are getting final increment in the function. So react implemented another method to setter function
 **setState(callbackFn)**
 **setState(callbackFn)=>(prev)=>nextValue**
 
+```jsx
 import { useState } from "react";
 
 const App = () => {
@@ -133,10 +145,12 @@ const App = () => {
     //Q=[]
     //Q=[3,fn],fn will invoke and return 3+1=4
     //Q=[]
+
 const [count, setCount] = useState(0);
     //1st render count = 0
     //2nd render count = 2
     //3rd render
+
 const increment = ()=>{
     setCount(count + 1); //setCount(1) //setCount(3)
     setCount((prev)=>{
@@ -151,14 +165,15 @@ return<>
 
 }
 export default App;
+```
 
 //lets see how setState works here
 //why this is async, react is not immediately rerender the setState value, Component is scheduled to callback queue
 //basically component is scheduled to rerender
 
-
 ### Lazy Initialisation
 
+```jsx
     function compute(){
         let sum = 0;
         for(let i = 0; i <= 100; i++){
@@ -167,6 +182,7 @@ export default App;
         return sum;
     }
     const[count, setCount]  = useState(compute());
+```
 
 - this compute function run loop for 100 times and returns sum
 - I need initial state of the component as sum of 100 number, so we are passing compute() inside useState (basically we are invoking the function)
