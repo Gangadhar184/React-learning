@@ -1,0 +1,14 @@
+.sub-navbar{
+    display: flex;
+    gap: 20px;
+    background-color: #f5f5f5;
+    padding: 10px;
+}
+a{
+    padding: 50px;
+    background: #fff;
+}
+.active-sub-link{
+    background: #849ba6;
+    color: white;
+}
